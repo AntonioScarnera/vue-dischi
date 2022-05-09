@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         
-        <filter-comp @mysearch="setSearchDisc($event)" :discType="genere"/>
+        <filter-comp @mysearch="setSearchGenreDisc($event)" :discType="genere"/>
 
         <loader-comp v-if="loading" />
 
@@ -35,11 +35,14 @@ export default {
             loading: false,
 
             genere: [],
-            searchGenere: ''
+            searchGenere: '',
+
+            autore: [],
+            searchAuthor: ''
         }
     },
     methods:{
-        setSearchDisc(text){
+        setSearchGenreDisc(text){
             this.searchGenere = text;
         }
     },
@@ -47,14 +50,14 @@ export default {
         filteredDisc(){
             if(this.searchGenere === '') return this.discList;
     
-            return this.discList.filter((el)=> el.genere === this.searchGenere)
+            return this.discList.filter((el)=> el.genre === this.searchGenere)
         }
     },
     created(){
         this.loading = true;
         axios.get(this.apiPath + 'music').then((res)=>{
             this.discList = res.data.response;
-
+            
             this.discList.forEach((el)=>{
                 if(!this.genere.includes(el.genre)){
                     this.genere.push(el.genre);
@@ -62,7 +65,8 @@ export default {
             })
 
             console.log(this.genere)
-           // console.log(this.discList);
+            console.log(this.filteredDisc);
+
             this.loading = false;
         }).catch((error)=>{
             console.log(error);
