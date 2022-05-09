@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         
-        <filter-comp @mysearch="setSearchGenreDisc($event)" :discType="genere"/>
+        <filter-comp @genreSearch="setSearchGenreDisc($event)" @authorSearch="setSearchAuthorDisc($event)" :discType="genere" :discAuthor="autore"/>
 
         <loader-comp v-if="loading" />
 
@@ -44,13 +44,17 @@ export default {
     methods:{
         setSearchGenreDisc(text){
             this.searchGenere = text;
+        },
+        setSearchAuthorDisc(txt){
+            this.searchAuthor = txt;
         }
     },
     computed: {
         filteredDisc(){
-            if(this.searchGenere === '') return this.discList;
-    
-            return this.discList.filter((el)=> el.genre === this.searchGenere)
+            if(this.searchGenere === '' && this.searchAuthor === '') return this.discList;
+
+            
+            return this.discList.filter((el)=> el.genre === this.searchGenere || el.author === this.searchAuthor)
         }
     },
     created(){
@@ -62,9 +66,13 @@ export default {
                 if(!this.genere.includes(el.genre)){
                     this.genere.push(el.genre);
                 }
+                if(!this.autore.includes(el.author)){
+                    this.autore.push(el.author)
+                }
             })
 
             console.log(this.genere)
+            console.log(this.autore)
             console.log(this.filteredDisc);
 
             this.loading = false;
